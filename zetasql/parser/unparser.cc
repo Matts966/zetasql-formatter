@@ -1733,15 +1733,15 @@ void Unparser::visitASTHavingModifier(const ASTHavingModifier* node,
 
 void Unparser::visitASTClampedBetweenModifier(
     const ASTClampedBetweenModifier* node, void* data) {
-  PrintCommentsPassedBy(node->start(), data);
+  PrintCommentsPassedBy(node.GetParseLocationRange().start(), data);
   println();
   {
     Formatter::Indenter indenter(&formatter_);
     print("CLAMPED BETWEEN");
     for (int i = 0; i < node->num_children(); i++) {
-      PrintCommentsPassedBy(node->child(i)->start(), data);
+      PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().start(), data);
       node->child(i)->Accept(this, data);
-      PrintCommentsPassedBy(node->child(i)->end(), data);
+      PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
       if (i < node->num_children() - 1) {
         println();
         print("AND");
@@ -2084,9 +2084,9 @@ void Unparser::visitASTOrExpr(const ASTOrExpr* node, void* data) {
   PrintCommentsPassedBy(node->GetParseLocationRange().start(), data);
   PrintOpenParenIfNeeded(node);
   for (int i = 0; i < node->num_children(); i++) {
-    PrintCommentsPassedBy(node->child(i)->start(), data);
+    PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().start(), data);
     node->child(i)->Accept(this, data);
-    PrintCommentsPassedBy(node->child(i)->end(), data);
+    PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
     if (i < node->num_children() - 1) {
       println();
       print("OR");
@@ -2101,9 +2101,9 @@ void Unparser::visitASTAndExpr(const ASTAndExpr* node, void* data) {
   PrintCommentsPassedBy(node->GetParseLocationRange().start(), data);
   PrintOpenParenIfNeeded(node);
   for (int i = 0; i < node->num_children(); i++) {
-    PrintCommentsPassedBy(node->child(i)->start(), data);
+    PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().start(), data);
     node->child(i)->Accept(this, data);
-    PrintCommentsPassedBy(node->child(i)->end(), data);
+    PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
     if (i < node->num_children() - 1) {
       println();
       print("AND");
