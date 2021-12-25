@@ -1741,12 +1741,12 @@ void Unparser::visitASTClampedBetweenModifier(
     print("CLAMPED BETWEEN");
     for (int i = 0; i < node->num_children(); i++) {
       PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().start(), data);
-      node->child(i)->Accept(this, data);
-      PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
-      if (i < node->num_children() - 1) {
+      if (i != 0) {
         println();
         print("AND");
       }
+      node->child(i)->Accept(this, data);
+      PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
     }
     PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
   }
@@ -2103,12 +2103,12 @@ void Unparser::visitASTAndExpr(const ASTAndExpr* node, void* data) {
   PrintOpenParenIfNeeded(node);
   for (int i = 0; i < node->num_children(); i++) {
     PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().start(), data);
-    node->child(i)->Accept(this, data);
-    PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
-    if (i < node->num_children() - 1) {
+    if (i != 0) {
       println();
       print("AND");
     }
+    node->child(i)->Accept(this, data);
+    PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
   }
   PrintCloseParenIfNeeded(node);
   println();
@@ -2328,12 +2328,12 @@ void Unparser::visitASTBetweenExpression(const ASTBetweenExpression* node,
     print(absl::StrCat(node->is_not() ? "NOT " : "", "BETWEEN"));
     for (int i = 1; i < node->num_children(); i++) {
       PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().start(), data);
-      node->child(i)->Accept(this, data);
-      PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
-      if (i < node->num_children() - 1) {
+      if (i != 1) {
         println();
         print("AND");
       }
+      node->child(i)->Accept(this, data);
+      PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
     }
     PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
     PrintCloseParenIfNeeded(node);
