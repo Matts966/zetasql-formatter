@@ -61,12 +61,11 @@ jobs:
             sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 900 \
               --slave /usr/bin/g++ g++ /usr/bin/g++-9
             make linux
-            cd /usr/local/bin/
             # ensure without path to prevent `cannot execute binary file` error.
             zip zetasql-formatter_linux_x86_64.zip zetasql-formatter
             cd -
             mv /usr/local/bin/zetasql-formatter_linux_x86_64.zip ./
-            zetasql-formatter .
+            ./zetasql-formatter .
       - name: Get Release
         id: get
         uses: bruceadams/get-release@v1.2.0
