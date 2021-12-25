@@ -18,11 +18,8 @@ jobs:
         run: |
           make test
           make osx
-          cd /usr/local/bin/
           # ensure without path to prevent `cannot execute binary file` error.
           zip zetasql-formatter_darwin_amd64.zip zetasql-formatter
-          cd -
-          mv /usr/local/bin/zetasql-formatter_darwin_amd64.zip ./
           zetasql-formatter .
       - name: Get Release
         id: get
@@ -74,8 +71,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.get.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: zetasql-formatter_linux_x86_64.tar.gz
-          asset_name: zetasql-formatter_linux_x86_64.tar.gz
+          asset_path: zetasql-formatter_linux_x86_64.zip
+          asset_name: zetasql-formatter_linux_x86_64.zip
           asset_content_type: application/zip
       - name: Test installation
         shell: bash

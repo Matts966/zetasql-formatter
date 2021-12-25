@@ -1733,9 +1733,22 @@ void Unparser::visitASTHavingModifier(const ASTHavingModifier* node,
 
 void Unparser::visitASTClampedBetweenModifier(
     const ASTClampedBetweenModifier* node, void* data) {
+  PrintCommentsPassedBy(node->start(), data);
   println();
-  print("CLAMPED BETWEEN");
-  UnparseChildrenWithSeparator(node, data, 0, node->num_children(), "AND");
+  {
+    Formatter::Indenter indenter(&formatter_);
+    print("CLAMPED BETWEEN");
+    for (int i = 0; i < node->num_children(); i++) {
+      PrintCommentsPassedBy(node->child(i)->start(), data);
+      node->child(i)->Accept(this, data);
+      PrintCommentsPassedBy(node->child(i)->end(), data);
+      if (i < node->num_children() - 1) {
+        println();
+        print("AND");
+      }
+    }
+    PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
+  }
 }
 
 void Unparser::UnparseASTTableDataSource(const ASTTableDataSource* node,
@@ -2071,28 +2084,34 @@ void Unparser::visitASTOrExpr(const ASTOrExpr* node, void* data) {
   PrintCommentsPassedBy(node->GetParseLocationRange().start(), data);
   PrintOpenParenIfNeeded(node);
   for (int i = 0; i < node->num_children(); i++) {
+    PrintCommentsPassedBy(node->child(i)->start(), data);
     node->child(i)->Accept(this, data);
-    println();
+    PrintCommentsPassedBy(node->child(i)->end(), data);
     if (i < node->num_children() - 1) {
+      println();
       print("OR");
     }
   }
-  PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
   PrintCloseParenIfNeeded(node);
+  println();
+  PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
 }
 
 void Unparser::visitASTAndExpr(const ASTAndExpr* node, void* data) {
   PrintCommentsPassedBy(node->GetParseLocationRange().start(), data);
   PrintOpenParenIfNeeded(node);
   for (int i = 0; i < node->num_children(); i++) {
+    PrintCommentsPassedBy(node->child(i)->start(), data);
     node->child(i)->Accept(this, data);
-    println();
+    PrintCommentsPassedBy(node->child(i)->end(), data);
     if (i < node->num_children() - 1) {
+      println();
       print("AND");
     }
   }
-  PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
   PrintCloseParenIfNeeded(node);
+  println();
+  PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
 }
 
 void Unparser::visitASTUnaryExpression(const ASTUnaryExpression* node,
@@ -2302,10 +2321,21 @@ void Unparser::visitASTBetweenExpression(const ASTBetweenExpression* node,
   PrintCommentsPassedBy(node->GetParseLocationRange().start(), data);
   PrintOpenParenIfNeeded(node);
   node->child(0)->Accept(this, data);
-  print(absl::StrCat(node->is_not() ? "NOT " : "", "BETWEEN"));
-  UnparseChildrenWithSeparator(node, data, 1, node->num_children(), "AND");
-  PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
-  PrintCloseParenIfNeeded(node);
+  {
+    Formatter::Indenter indenter(&formatter_);
+    print(absl::StrCat(node->is_not() ? "NOT " : "", "BETWEEN"));
+    for (int i = 1; i < node->num_children(); i++) {
+      PrintCommentsPassedBy(node->child(i)->start(), data);
+      node->child(i)->Accept(this, data);
+      PrintCommentsPassedBy(node->child(i)->end(), data);
+      if (i < node->num_children() - 1) {
+        println();
+        print("AND");
+      }
+    }
+    PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
+    PrintCloseParenIfNeeded(node);
+  }
 }
 
 void Unparser::visitASTFunctionCall(const ASTFunctionCall* node, void* data) {
@@ -2655,12 +2685,14 @@ void Unparser::visitASTWindowFrame(const ASTWindowFrame* node,
   PrintCommentsPassedBy(node->GetParseLocationRange().start(), data);
   print(node->GetFrameUnitString());
   if (nullptr != node->end_expr()) {
+    Formatter::Indenter indenter(&formatter_);
     print("BETWEEN");
-  }
-  node->start_expr()->Accept(this, data);
-  if (nullptr != node->end_expr()) {
+    node->start_expr()->Accept(this, data);
+    println();
     print("AND");
     node->end_expr()->Accept(this, data);
+  } else {
+    node->start_expr()->Accept(this, data);
   }
   PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
 }
