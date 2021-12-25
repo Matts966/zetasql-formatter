@@ -63,8 +63,6 @@ jobs:
             make linux
             # ensure without path to prevent `cannot execute binary file` error.
             zip zetasql-formatter_linux_x86_64.zip zetasql-formatter
-            cd -
-            mv /usr/local/bin/zetasql-formatter_linux_x86_64.zip ./
             ./zetasql-formatter .
       - name: Get Release
         id: get
