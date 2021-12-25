@@ -81,5 +81,5 @@ jobs:
         run: |
           temp=$(mktemp -d)
           wget -P $temp "https://github.com/Matts966/zetasql-formatter/releases/download/${TAG}/zetasql-formatter_linux_x86_64.zip"
-          sudo unzip $temp/zetasql-formatter_darwin_amd64.zip -d /usr/local/bin
+          sudo unzip $temp/zetasql-formatter_linux_x86_64.zip -d /usr/local/bin
           zetasql-formatter .

@@ -1737,6 +1737,7 @@ void Unparser::visitASTClampedBetweenModifier(
   println();
   {
     Formatter::Indenter indenter(&formatter_);
+    println();
     print("CLAMPED BETWEEN");
     for (int i = 0; i < node->num_children(); i++) {
       PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().start(), data);
@@ -2323,6 +2324,7 @@ void Unparser::visitASTBetweenExpression(const ASTBetweenExpression* node,
   node->child(0)->Accept(this, data);
   {
     Formatter::Indenter indenter(&formatter_);
+    println();
     print(absl::StrCat(node->is_not() ? "NOT " : "", "BETWEEN"));
     for (int i = 1; i < node->num_children(); i++) {
       PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().start(), data);
@@ -2686,6 +2688,7 @@ void Unparser::visitASTWindowFrame(const ASTWindowFrame* node,
   print(node->GetFrameUnitString());
   if (nullptr != node->end_expr()) {
     Formatter::Indenter indenter(&formatter_);
+    println();
     print("BETWEEN");
     node->start_expr()->Accept(this, data);
     println();
