@@ -184,5 +184,23 @@ TEST(SqlFormatterTest, Comment) {
             formatted_sql);
 }
 
+TEST(SqlFormatterTest, SeparatorAndGroupBy) {
+    std::string query_string(
+      "SELECT\n"
+      "  *\n"
+      "FROM\n"
+      "  foo.bar_tab\n"
+      "WHERE\n"
+      "  col1 = 'abc'\n"
+      "  AND col2 > 10\n"
+      "  AND col3 IS NOT NULL\n"
+      "GROUP BY\n"
+      "  0, x, y, z;\n");
+  std::string formatted_sql;
+  ZETASQL_ASSERT_OK(FormatSql(query_string, &formatted_sql));
+  EXPECT_EQ(query_string,
+            formatted_sql);
+}
+
 }  // namespace
 }  // namespace zetasql

@@ -1,9 +1,24 @@
 name: test
 on: push
 jobs:
-  test:
+  linux:
+    name: Test the repository on Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: Setup
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y gcc-9 g++-9
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 900 \
+            --slave /usr/bin/g++ g++ /usr/bin/g++-9
+          bazelisk test --test_output=errors //zetasql/tools/...
+  macos:
     name: Test the repository
-    runs-on: macos-latest
+    runs-on: macos-10.15
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
