@@ -1733,7 +1733,7 @@ void Unparser::visitASTHavingModifier(const ASTHavingModifier* node,
 
 void Unparser::visitASTClampedBetweenModifier(
     const ASTClampedBetweenModifier* node, void* data) {
-  PrintCommentsPassedBy(node.GetParseLocationRange().start(), data);
+  PrintCommentsPassedBy(node->GetParseLocationRange().start(), data);
   println();
   {
     Formatter::Indenter indenter(&formatter_);
@@ -2325,9 +2325,9 @@ void Unparser::visitASTBetweenExpression(const ASTBetweenExpression* node,
     Formatter::Indenter indenter(&formatter_);
     print(absl::StrCat(node->is_not() ? "NOT " : "", "BETWEEN"));
     for (int i = 1; i < node->num_children(); i++) {
-      PrintCommentsPassedBy(node->child(i)->start(), data);
+      PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().start(), data);
       node->child(i)->Accept(this, data);
-      PrintCommentsPassedBy(node->child(i)->end(), data);
+      PrintCommentsPassedBy(node->child(i)->GetParseLocationRange().end(), data);
       if (i < node->num_children() - 1) {
         println();
         print("AND");
