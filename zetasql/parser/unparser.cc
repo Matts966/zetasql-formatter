@@ -1646,7 +1646,7 @@ void Unparser::visitASTGroupBy(const ASTGroupBy* node, void* data) {
   println("BY");
   {
     Formatter::Indenter indenter(&formatter_);
-    UnparseVectorWithSeparator(node->grouping_items(), data, ",", true /* break_line */);
+    UnparseVectorWithSeparator(node->grouping_items(), data, ",");
     PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
   }
 }
@@ -2070,7 +2070,13 @@ void Unparser::visitASTDotStarWithModifiers(
 void Unparser::visitASTOrExpr(const ASTOrExpr* node, void* data) {
   PrintCommentsPassedBy(node->GetParseLocationRange().start(), data);
   PrintOpenParenIfNeeded(node);
-  UnparseChildrenWithSeparator(node, data, "OR");
+  for (int i = 0; i < node->num_children(); i++) {
+    node->child(i)->Accept(this, data);
+    println();
+    if (i < node->num_children() - 1) {
+      print("OR");
+    }
+  }
   PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
   PrintCloseParenIfNeeded(node);
 }
@@ -2078,7 +2084,13 @@ void Unparser::visitASTOrExpr(const ASTOrExpr* node, void* data) {
 void Unparser::visitASTAndExpr(const ASTAndExpr* node, void* data) {
   PrintCommentsPassedBy(node->GetParseLocationRange().start(), data);
   PrintOpenParenIfNeeded(node);
-  UnparseChildrenWithSeparator(node, data, "AND");
+  for (int i = 0; i < node->num_children(); i++) {
+    node->child(i)->Accept(this, data);
+    println();
+    if (i < node->num_children() - 1) {
+      print("AND");
+    }
+  }
   PrintCommentsPassedBy(node->GetParseLocationRange().end(), data);
   PrintCloseParenIfNeeded(node);
 }

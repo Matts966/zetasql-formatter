@@ -92,7 +92,39 @@ TEST(TestUnparser, BEGINEND) {
       "END;\n");
   std::unique_ptr<ParserOutput> parser_output;
   ZETASQL_EXPECT_OK(ParseScript(query_string,
-                                ParserOptions(), 
+                                ParserOptions(),
+                                ErrorMessageMode::ERROR_MESSAGE_MULTI_LINE_WITH_CARET,
+                                &parser_output));
+  ASSERT_THAT(parser_output->script(), NotNull());
+  std::string unparsed_string = Unparse(parser_output->script());
+  // Cannot generally do string equality because of capitalization and white
+  // space issues, so we will reparse and also compare the parse trees.
+  EXPECT_EQ(query_string, unparsed_string);
+  std::unique_ptr<ParserOutput> unparsed_query_parser_output;
+  ZETASQL_EXPECT_OK(ParseScript(unparsed_string,
+                           ParserOptions(),
+                           ErrorMessageMode::ERROR_MESSAGE_MULTI_LINE_WITH_CARET,
+                           &unparsed_query_parser_output));
+  CompareParseTrees(parser_output->script(),
+                    unparsed_query_parser_output->script(), query_string,
+                    unparsed_string);
+}
+
+TEST(TestUnparser, SeparatorAndGroupBy) {
+  std::string query_string(
+      "SELECT\n"
+      "  *\n"
+      "FROM\n"
+      "  foo.bar_tab\n"
+      "WHERE\n"
+      "  col1 = 'abc'\n"
+      "  AND col2 > 10\n"
+      "  AND col3 IS NOT NULL\n"
+      "GROUP BY\n"
+      "  0, x, y, z;\n");
+  std::unique_ptr<ParserOutput> parser_output;
+  ZETASQL_EXPECT_OK(ParseScript(query_string,
+                                ParserOptions(),
                                 ErrorMessageMode::ERROR_MESSAGE_MULTI_LINE_WITH_CARET,
                                 &parser_output));
   ASSERT_THAT(parser_output->script(), NotNull());
