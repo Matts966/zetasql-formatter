@@ -104,6 +104,14 @@ class ParseLocationPoint {
     return lhs.filename_ < rhs.filename_;
   }
 
+  friend bool operator>(const ParseLocationPoint& lhs,
+                        const ParseLocationPoint& rhs) {
+    if (lhs.filename_ == rhs.filename_) {
+      return lhs.byte_offset_ > rhs.byte_offset_;
+    }
+    return lhs.filename_ > rhs.filename_;
+  }
+
   friend std::ostream& operator<<(std::ostream& os,
                                   const ParseLocationPoint& point) {
     return os << "ParseLocationPoint at offset " << point.GetByteOffset();

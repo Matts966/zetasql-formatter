@@ -17,8 +17,8 @@
 #include "zetasql/public/sql_formatter.h"
 
 #include <memory>
-#include <string>
 #include <vector>
+#include <deque>
 
 #include "zetasql/base/logging.h"
 #include "zetasql/parser/parse_tree.h"
@@ -44,80 +44,35 @@ absl::Status FormatSql(absl::string_view sql, std::string* formatted_sql) {
 
   *formatted_sql = std::string(sql);
 
-  std::vector<std::string> formatted_statement;
+  ParseTokenOptions options;
+  options.include_comments = true;
+  LanguageOptions language_options;
+  language_options.EnableMaximumLanguageFeaturesForDevelopment();
+  options.language_options = language_options;
 
+  std::unique_ptr<ParserOutput> parser_output;
+
+  ZETASQL_RETURN_IF_ERROR(ParseScript(sql, ParserOptions(language_options),
+                          ErrorMessageMode::ERROR_MESSAGE_MULTI_LINE_WITH_CARET, &parser_output));
+  std::deque<std::pair<std::string, ParseLocationPoint>> comments;
+  std::vector<ParseToken> parse_tokens;
   ParseResumeLocation location = ParseResumeLocation::FromStringView(sql);
-  bool at_end_of_input = false;
-  absl::Status return_status = absl::OkStatus();
-  while (!at_end_of_input) {
-    std::unique_ptr<ParserOutput> parser_output;
-    LanguageOptions language_options;
-    language_options.EnableMaximumLanguageFeaturesForDevelopment();
-    const absl::Status status =
-        ParseNextStatement(&location, ParserOptions(language_options),
-                           &parser_output, &at_end_of_input);
-
-    if (status.ok()) {
-      formatted_statement.push_back(Unparse(parser_output->statement()));
-    } else {
-      const absl::Status out_status = MaybeUpdateErrorFromPayload(
-          ErrorMessageMode::ERROR_MESSAGE_MULTI_LINE_WITH_CARET, sql, status);
-      if (return_status.ok()) {
-        return_status = out_status;
-      } else {
-        return_status = ::zetasql_base::StatusBuilder(return_status).SetAppend()
-                        << "\n"
-                        << FormatError(out_status);
-      }
-
-      // When statement is not parseable, we proceed to the next semicolon and
-      // just emit the original string in between.
-      std::vector<ParseToken> parse_tokens;
-      ParseTokenOptions options;
-      options.language_options = language_options;
-      options.stop_at_end_of_statement = true;
-      const int statement_start = location.byte_position();
-      const absl::Status token_status =
-          GetParseTokens(options, &location, &parse_tokens);
-      // If GetParseTokens fails, just returns the original sql since there's no
-      // way to proceed forward.
-      if (!token_status.ok()) {
-        return MaybeUpdateErrorFromPayload(
-            ErrorMessageMode::ERROR_MESSAGE_MULTI_LINE_WITH_CARET, sql,
-            token_status);
-      }
-      // GetParseTokens() reads until either a semicolon or end of input.
-      if (parse_tokens.back().IsEndOfInput()) {
-        // When there's trailing whitespace or comment after the last
-        // semicolon, parse_tokens will be one END_OF_INPUT token.
-        // It should not be treated as a statement. If there's more than one
-        // token, then we treat the remainder of the input as a statement.
-        if (parse_tokens.size() != 1) {
-          formatted_statement.push_back(
-              std::string(sql.substr(statement_start)));
-        }
-        at_end_of_input = true;
-      } else {
-        // The last token parsed must be a semicolon. Do not include it, because
-        // we will add one later.
-        ZETASQL_RET_CHECK_EQ(parse_tokens.back().GetKeyword(), ";");
-        const int statement_length =
-            parse_tokens.back().GetLocationRange().start().GetByteOffset() -
-            statement_start;
-        formatted_statement.push_back(
-            std::string(sql.substr(statement_start, statement_length)));
+  const absl::Status token_status =
+      GetParseTokens(options, &location, &parse_tokens);
+  if (token_status.ok()) {
+    for (const auto& parse_token : parse_tokens) {
+      if (parse_token.IsEndOfInput()) break;
+      if (parse_token.IsComment()) {
+        comments.push_back(std::make_pair(parse_token.GetSQL(), parse_token.GetLocationRange().start()));
       }
     }
+    *formatted_sql = UnparseWithComments(parser_output->script(), comments);
+  } else {
+    // If GetParseTokens fails, just ignores comments.
+    *formatted_sql = Unparse(parser_output->script());
   }
 
-  // The result from Unparse always ends with '\n'. Strips whitespaces so ';'
-  // can follow the statement immediately rather than starting a new line.
-  for (auto& e : formatted_statement) {
-    absl::StripAsciiWhitespace(&e);
-  }
-
-  *formatted_sql = absl::StrCat(absl::StrJoin(formatted_statement, ";\n"), ";");
-  return return_status;
+  return absl::OkStatus();
 }
 
 }  // namespace zetasql

@@ -71,6 +71,8 @@ def GenerateParseTreeVisitor(concrete_classes):
        public:
         virtual ~ParseTreeVisitor() {}
         virtual void visit(const ASTNode *node, void* data) = 0;
+        virtual void visitStart(const ASTNode *node, void* data) {};
+        virtual void visitEnd(const ASTNode *node, void* data) {};
       ''')
   for cls in concrete_classes:
     yield ('  virtual void visit{0}(const {0}* node, void* data) = 0;\n\n'
@@ -154,7 +156,9 @@ def GeneerateParseTreeAcceptMethods(
   for cls in concrete_classes:
     yield textwrap.dedent('''\
         void {0}::Accept(ParseTreeVisitor* visitor, void* data) const {{
+          visitor->visitStart(this, data);
           visitor->visit{0}(this, data);
+          visitor->visitEnd(this, data);
         }}
 
         ''').format(cls)

@@ -89,6 +89,10 @@ class Formatter {
   // some content remains in buffer_.
   void FlushLine();
 
+  bool last_token_is_comment = false;
+  void EndStatement();
+  bool FlushCommentsPassedBy(const ParseLocationPoint point, void* data);
+
  private:
   // Checks if last token in buffer_ is a separator, where it is appropriate to
   // insert a line break or a space before open paren.
@@ -132,6 +136,14 @@ class Unparser : public ParseTreeVisitor {
   void visit(const ASTNode* node, void* data) override {
     visitASTChildren(node, data);
   }
+
+  void visitStart(const ASTNode *node, void* data) override {
+    formatter_.FlushCommentsPassedBy(node->GetParseLocationRange().start(), data);
+  };
+
+  void visitEnd(const ASTNode *node, void* data) override {
+    formatter_.FlushCommentsPassedBy(node->GetParseLocationRange().end(), data);
+  };
 
   // Shorthand for calling methods in formatter_.
   void print(absl::string_view s) { formatter_.Format(s); }
@@ -688,11 +700,13 @@ class Unparser : public ParseTreeVisitor {
   // Set break_line to true if you want to print each child on a separate line.
   virtual void UnparseChildrenWithSeparator(const ASTNode* node, void* data,
                                             const std::string& separator,
-                                            bool break_line = false);
+                                            bool break_line = false,
+                                            bool separator_first = false);
   virtual void UnparseChildrenWithSeparator(const ASTNode* node, void* data,
                                             int begin, int end,
                                             const std::string& separator,
-                                            bool break_line = false);
+                                            bool break_line = false,
+                                            bool separator_first = false);
 
   template <class NodeType>
   void UnparseVectorWithSeparator(

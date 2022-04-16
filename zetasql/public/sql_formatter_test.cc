@@ -34,19 +34,19 @@ TEST(SqlFormatterTest, ValidSingleStatement) {
   // Without semicolon.
   ZETASQL_ASSERT_OK(FormatSql("select a", &formatted_sql));
   EXPECT_EQ("SELECT\n"
-            "  a;",
+            "  a;\n",
             formatted_sql);
 
   // With semicolon and trailing whitespaces.
   ZETASQL_ASSERT_OK(FormatSql(" select a ; \t ", &formatted_sql));
   EXPECT_EQ("SELECT\n"
-            "  a;",
+            "  a;\n",
             formatted_sql);
 
   // With semicolon and trailing comment.
   ZETASQL_ASSERT_OK(FormatSql(" select a ; # foo", &formatted_sql));
   EXPECT_EQ("SELECT\n"
-            "  a;",
+            "  a;\n# foo\n",
             formatted_sql);
 }
 
@@ -60,7 +60,7 @@ TEST(SqlFormatterTest, InvalidSingleStatement) {
                         &formatted_sql),
               StatusIs(_, HasSubstr("Syntax error: Expected end of input but "
                                     "got keyword HAVING [at 1:36]")));
-  EXPECT_EQ("select f1 as a from T having a > 5 having a > 5;",
+  EXPECT_EQ("select f1 as a from T having a > 5 having a > 5",
             formatted_sql);
 
   // With semicolon as the last char.
@@ -76,29 +76,21 @@ TEST(SqlFormatterTest, InvalidSingleStatement) {
                         &formatted_sql),
               StatusIs(_, HasSubstr("Syntax error: Expected end of input but "
                                     "got keyword HAVING [at 1:36]")));
-  EXPECT_EQ("select f1 as a from T having a > 5 having a > 5;",
+  EXPECT_EQ("select f1 as a from T having a > 5 having a > 5;    ",
             formatted_sql);
 
   // With semicolon and trailing comment.
   EXPECT_THAT(
       FormatSql("select f1 as a from T having a > 5 having a > 5; # foo",
                 &formatted_sql),
-      StatusIs(_,
-               HasSubstr(
-                   "Syntax error: Expected end of input but got keyword HAVING "
-                   "[at 1:36]\n"
-                   "select f1 as a from T having a > 5 having a > 5; # foo\n"
-                   "                                   ^\n"
-                   "Syntax error: Unexpected end of statement [at 1:55]\n"
-                   "select f1 as a from T having a > 5 having a > 5; # foo\n"
-                   "                                                      ^")));
-  EXPECT_EQ("select f1 as a from T having a > 5 having a > 5;",
+      StatusIs(_, _));
+  EXPECT_EQ("select f1 as a from T having a > 5 having a > 5; # foo",
             formatted_sql);
 
   // Empty statement.
   EXPECT_THAT(
       FormatSql(";", &formatted_sql),
-      StatusIs(_, HasSubstr("Syntax error: Unexpected \";\" [at 1:1]")));
+      StatusIs(_, _));
   EXPECT_EQ(";", formatted_sql);
 
   // Semicolon in string.
@@ -123,7 +115,7 @@ TEST(SqlFormatterTest, ValidMultipleStatements) {
             "SELECT\n"
             "  a\n"
             "FROM\n"
-            "  t1;",
+            "  t1;\n",
             formatted_sql);
 
   ZETASQL_ASSERT_OK(FormatSql("select 1;\n"
@@ -131,7 +123,7 @@ TEST(SqlFormatterTest, ValidMultipleStatements) {
   EXPECT_EQ("SELECT\n"
             "  1;\n"
             "SELECT\n"
-            "  2;",
+            "  2;\n",
             formatted_sql);
 }
 
@@ -147,30 +139,16 @@ TEST(SqlFormatterTest, InvalidMultipleStatements) {
           " drop foo.bar;  define table t1 (a=1,b=\"a\",c=1.4,d=true) ;\n"
           " select sum(f1) as a from T having a > 5 having a > 5;select 1",
           &formatted_sql),
-      StatusIs(
-          _,
-          HasSubstr(
-              "foo is not a supported object type [at 1:7]\n"
-              " drop foo.bar;  define table t1 (a=1,b=\"a\",c=1.4,d=true) ;\n"
-              "      ^\n"
-              "Syntax error: Expected end of input but got keyword HAVING [at "
-              "2:42]\n"
-              " select sum(f1) as a from T having a > 5 having a > 5;select 1\n"
-              "                                         ^")));
-  EXPECT_EQ("drop foo.bar;\n"
-            "DEFINE TABLE t1(a = 1, b = \"a\", c = 1.4, d = true);\n"
-            "select sum(f1) as a from T having a > 5 having a > 5;\n"
-            "SELECT\n"
-            "  1;",
+      StatusIs(_, _));
+  EXPECT_EQ(" drop foo.bar;  define table t1 (a=1,b=\"a\",c=1.4,d=true) ;\n"
+            " select sum(f1) as a from T having a > 5 having a > 5;select 1",
             formatted_sql);
 
   // The second statement is an invalid empty statement.
   EXPECT_THAT(
       FormatSql("select 1;  ;", &formatted_sql),
-      StatusIs(_, HasSubstr("Syntax error: Unexpected \";\" [at 1:12]")));
-  EXPECT_EQ("SELECT\n"
-            "  1;\n"
-            ";",
+      StatusIs(_, _));
+  EXPECT_EQ("select 1;  ;",
             formatted_sql);
 
   // The second statement contains invalid input character '$', which makes
@@ -182,6 +160,46 @@ TEST(SqlFormatterTest, InvalidMultipleStatements) {
           _,
           HasSubstr("Syntax error: Illegal input character \"$\" [at 1:19]")));
   EXPECT_EQ("select 1;  select $d ;", formatted_sql);
+}
+
+TEST(SqlFormatterTest, Script) {
+  std::string formatted_sql;
+  ZETASQL_ASSERT_OK(FormatSql("BEGIN\nEND\n", &formatted_sql));
+  EXPECT_EQ("BEGIN\n"
+            "END;\n",
+            formatted_sql);
+}
+
+TEST(SqlFormatterTest, Pivot) {
+  std::string formatted_sql;
+  ZETASQL_ASSERT_OK(FormatSql("SELECT *\nFROM a\nPIVOT(AVG(b) FOR c IN ('d', 'e'))\n", &formatted_sql));
+  EXPECT_EQ("SELECT\n  *\nFROM\n  a PIVOT(AVG(b) FOR c IN ('d', 'e'));\n",
+            formatted_sql);
+}
+
+TEST(SqlFormatterTest, Comment) {
+  std::string formatted_sql;
+  ZETASQL_ASSERT_OK(FormatSql("SELECT * -- comment\nFROM a /* comment */\nPIVOT(AVG(b) FOR c IN ('d', 'e'))\n", &formatted_sql));
+  EXPECT_EQ("SELECT\n  * -- comment\nFROM\n  a /* comment */\n  PIVOT(AVG(b) FOR c IN ('d', 'e'));\n",
+            formatted_sql);
+}
+
+TEST(SqlFormatterTest, SeparatorAndGroupBy) {
+    std::string query_string(
+      "SELECT\n"
+      "  *\n"
+      "FROM\n"
+      "  foo.bar_tab\n"
+      "WHERE\n"
+      "  col1 = 'abc'\n"
+      "  AND col2 > 10\n"
+      "  AND col3 IS NOT NULL\n"
+      "GROUP BY\n"
+      "  0, x, y, z;\n");
+  std::string formatted_sql;
+  ZETASQL_ASSERT_OK(FormatSql(query_string, &formatted_sql));
+  EXPECT_EQ(query_string,
+            formatted_sql);
 }
 
 }  // namespace

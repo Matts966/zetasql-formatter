@@ -22,6 +22,7 @@
 #include <utility>
 #include <variant>
 #include <vector>
+#include <deque>
 
 #include "zetasql/base/arena.h"
 #include "zetasql/parser/ast_node_kind.h"
@@ -258,6 +259,8 @@ absl::Status ParseExpression(const ParseResumeLocation& resume_location,
 // Unparse a given AST back to a canonical SQL string and return it.
 // Works for any AST node.
 std::string Unparse(const ASTNode* root);
+std::string UnparseWithComments(const ASTNode* root, std::deque<std::pair<std::string,
+                    ParseLocationPoint>>& parse_tokens);
 
 // Parse the first few keywords from <input> (ignoring whitespace, comments and
 // hints) to determine what kind of statement it is (if it is valid).
