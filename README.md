@@ -1,7 +1,6 @@
 ## ZetaSQL Formatter
 
-[![release](https://github.com/Matts966/zetasql-formatter/workflows/release/badge.svg?event=create)](https://github.com/Matts966/zetasql-formatter/actions?query=event%3Acreate+workflow%3Arelease+)
-[![test](https://github.com/Matts966/zetasql-formatter/workflows/test/badge.svg?branch=formatter)](https://github.com/Matts966/zetasql-formatter/actions?query=branch%main+workflow%3Atest+)
+[![build](https://github.com/Matts966/zetasql-formatter/workflows/Build/badge.svg?branch=main)](https://github.com/Matts966/zetasql-formatter/actions?query=branch%main+workflow%3ABuild+)
 
 <p align="center">
   <img src="./docs/changes.png">
