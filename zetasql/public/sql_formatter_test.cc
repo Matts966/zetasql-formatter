@@ -195,7 +195,10 @@ TEST(SqlFormatterTest, SeparatorAndGroupBy) {
       "  AND col2 > 10\n"
       "  AND col3 IS NOT NULL\n"
       "GROUP BY\n"
-      "  0, x, y, z;\n");
+      "  0, 1"
+      "  x,"
+      "  y,"
+      "  z;\n");
   std::string formatted_sql;
   ZETASQL_ASSERT_OK(FormatSql(query_string, &formatted_sql));
   EXPECT_EQ(query_string,
