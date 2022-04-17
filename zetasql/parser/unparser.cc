@@ -1623,7 +1623,24 @@ void Unparser::visitASTGroupBy(const ASTGroupBy* node, void* data) {
   println("BY");
   {
     Formatter::Indenter indenter(&formatter_);
-    UnparseVectorWithSeparator(node->grouping_items(), data, ",");
+    std::vector<const ASTIntLiteral*> int_grouping_items;
+    std::vector<const ASTGroupingItem*> other_grouping_items;
+    for (const auto grouping_item : node->grouping_items()) {
+      const auto& expr = grouping_item->expression();
+      if (expr == nullptr) {
+        other_grouping_items.push_back(grouping_item);
+        continue;
+      }
+      const auto& int_item = expr->GetAsOrNull<ASTIntLiteral>();
+      if (int_item == nullptr) {
+        other_grouping_items.push_back(grouping_item);
+        continue;
+      }
+      int_grouping_items.push_back(int_item);
+    }
+    UnparseVectorWithSeparator(absl::Span<const ASTIntLiteral* const>(int_grouping_items), data, ",");
+    println();
+    UnparseVectorWithSeparator(absl::Span<const ASTGroupingItem* const>(other_grouping_items), data, ",\n");
   }
 }
 
