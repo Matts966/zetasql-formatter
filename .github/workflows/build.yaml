@@ -54,15 +54,20 @@ jobs:
       - name: Test the repository
         run: |
           export TEST_TMPDIR=~/.cache/bazel
-          CC=g++ bazelisk test --test_output=errors //zetasql/public:sql_formatter_test
+          # CC=g++ bazelisk test --test_output=errors //zetasql/public:sql_formatter_test
           CC=g++ bazelisk build //zetasql/tools/zetasql-formatter:format
+          CC=g++ bazelisk build //zetasql/tools/execute_query:execute_query
           sudo cp bazel-bin/zetasql/tools/zetasql-formatter/format zetasql-formatter
+          sudo cp bazel-bin/zetasql/tools/execute_query/execute_query execute_query
           zip zetasql-formatter_darwin_amd64.zip zetasql-formatter
+          zip execute_query_darwin_amd64.zip execute_query
           ./zetasql-formatter .
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: zetasql-formatter_darwin_amd64.zip
+          files: |
+            zetasql-formatter_darwin_amd64.zip
+            execute_query_darwin_amd64.zip
           prerelease: true
           generate_release_notes: true
