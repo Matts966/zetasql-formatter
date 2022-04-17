@@ -9,7 +9,7 @@ cc_binary(
         "//zetasql/public:sql_formatter",
         "@com_google_absl//absl/strings",
         "@com_google_absl//absl/types:optional",
-        "//external:gflags",
+        "@com_github_gflags_gflags//:gflags",
     ],
     local_defines = [
         "VERSION_STRING=$(shell git describe --tags)",
