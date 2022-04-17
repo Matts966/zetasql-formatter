@@ -7,10 +7,10 @@
 #include "zetasql/base/logging.h"
 #include "zetasql/base/status.h"
 #include "zetasql/public/sql_formatter.h"
-#include "absl/flags/flag.h"
-#include "absl/flags/parse.h"
 #include "absl/strings/strip.h"
 #include "absl/strings/str_join.h"
+#include "gflags/gflags.h"
+#include "zetasql/tools/zetasql-formatter/version.h"
 
 int format(const std::filesystem::path& file_path) {
   std::string formatted;
@@ -38,14 +38,15 @@ int format(const std::filesystem::path& file_path) {
 // format formats all sql files in specified directory and returns code 0
 // if all files are formatted and 1 if error occurs or any file is formatted.
 int main(int argc, char* argv[]) {
-  const char kUsage[] =
-      "Usage: format <directory paths...>\n";
-  std::vector<char*> args = absl::ParseCommandLine(argc, argv);
+  const auto kUsage = "Usage: zetasql-formatter <paths...>";
+  gflags::SetUsageMessage(kUsage);
+  gflags::SetVersionString(ZSQL_FMT_VERSION_STRING);
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
   if (argc <= 1) {
-    ZETASQL_LOG(QFATAL) << kUsage;
+    std::cerr << kUsage << std::endl;
+    return 1;
   }
-  std::vector<char*> remaining_args(args.begin() + 1, args.end());
-
+  std::vector<std::string> remaining_args(argv + 1, argv + argc);
   int rc = 0;
   for (const auto& path : remaining_args) {
     if (std::filesystem::is_regular_file(path)) {
