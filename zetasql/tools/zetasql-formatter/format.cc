@@ -7,10 +7,9 @@
 #include "zetasql/base/logging.h"
 #include "zetasql/base/status.h"
 #include "zetasql/public/sql_formatter.h"
-#include "absl/flags/flag.h"
-#include "absl/flags/parse.h"
 #include "absl/strings/strip.h"
 #include "absl/strings/str_join.h"
+#include "gflags/gflags.h"
 
 int format(const std::filesystem::path& file_path) {
   std::string formatted;
@@ -38,21 +37,20 @@ int format(const std::filesystem::path& file_path) {
 // format formats all sql files in specified directory and returns code 0
 // if all files are formatted and 1 if error occurs or any file is formatted.
 int main(int argc, char* argv[]) {
-  const char kUsage[] =
-      "Usage: format <directory paths...>\n";
-  std::vector<char*> args = absl::ParseCommandLine(argc, argv);
+  gflags::SetUsageMessage("Usage: zetasql-formatter <paths...>");
+  gflags::SetVersionString("1.0.0");
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
   if (argc <= 1) {
-    ZETASQL_LOG(QFATAL) << kUsage;
+    std::cerr << kUsage;
+    return 1;
   }
-  std::vector<char*> remaining_args(args.begin() + 1, args.end());
-
   int rc = 0;
-  for (const auto& path : remaining_args) {
-    if (std::filesystem::is_regular_file(path)) {
-      std::filesystem::path file_path(path);
+  for (;argc--; argv+) {
+    if (std::filesystem::is_regular_file(*argv)) {
+      std::filesystem::path file_path(*argv);
       return format(file_path);
     }
-    std::filesystem::recursive_directory_iterator file_path(path,
+    std::filesystem::recursive_directory_iterator file_path(*argv,
                                                   std::filesystem::directory_options::skip_permission_denied)
                                                   , end;
     std::error_code err;
