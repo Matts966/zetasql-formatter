@@ -24,6 +24,7 @@ package(
 
 exports_files([
     "pom-template.xml",
+    "workspace_status.sh",
 ])
 
 bzl_library(
