@@ -1963,7 +1963,9 @@ void Unparser::visitASTStarWithModifiers(const ASTStarWithModifiers* node,
 void Unparser::visitASTPathExpression(const ASTPathExpression* node,
                                       void* data) {
   PrintOpenParenIfNeeded(node);
+  print("`");
   UnparseChildrenWithSeparator(node, data, ".");
+  print("`");
   PrintCloseParenIfNeeded(node);
 }
 
