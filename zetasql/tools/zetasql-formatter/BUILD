@@ -11,7 +11,4 @@ cc_binary(
         "@com_google_absl//absl/types:optional",
         "@com_github_gflags_gflags//:gflags",
     ],
-    local_defines = [
-        "VERSION_STRING=$(shell git describe --tags)",
-    ],
 )

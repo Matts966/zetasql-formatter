@@ -38,7 +38,7 @@ int format(const std::filesystem::path& file_path) {
 // if all files are formatted and 1 if error occurs or any file is formatted.
 int main(int argc, char* argv[]) {
   gflags::SetUsageMessage("Usage: zetasql-formatter <paths...>");
-  gflags::SetVersionString(VERSION_STRING);
+  gflags::SetVersionString(ZSQL_FMT_VERSION_STRING);
   gflags::ParseCommandLineFlags(&argc, &argv, true);
   if (argc <= 1) {
     std::cerr << kUsage;

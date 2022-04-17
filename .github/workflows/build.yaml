@@ -24,7 +24,8 @@ jobs:
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 900 \
             --slave /usr/bin/g++ g++ /usr/bin/g++-9
           bazelisk test --test_output=errors //zetasql/public:sql_formatter_test
-          bazelisk build //zetasql/tools/zetasql-formatter:format
+          bazelisk build -DZSQL_FMT_VERSION_STRING=$(git describe --tags) \
+            //zetasql/tools/zetasql-formatter:format
           sudo cp bazel-bin/zetasql/tools/zetasql-formatter/format zetasql-formatter
           zip zetasql-formatter_linux_x86_64.zip zetasql-formatter
           ./zetasql-formatter .
@@ -53,7 +54,8 @@ jobs:
         run: |
           export TEST_TMPDIR=~/.cache/bazel
           CC=g++ bazelisk test --test_output=errors //zetasql/public:sql_formatter_test
-          CC=g++ bazelisk build //zetasql/tools/zetasql-formatter:format
+          CC=g++ bazelisk build -DZSQL_FMT_VERSION_STRING=$(git describe --tags) \
+            //zetasql/tools/zetasql-formatter:format
           sudo cp bazel-bin/zetasql/tools/zetasql-formatter/format zetasql-formatter
           zip zetasql-formatter_darwin_amd64.zip zetasql-formatter
           ./zetasql-formatter .
