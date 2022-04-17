@@ -189,7 +189,7 @@ TEST(SqlFormatterTest, SeparatorAndGroupBy) {
       "SELECT\n"
       "  *\n"
       "FROM\n"
-      "  foo.bar_tab\n"
+      "  `foo.bar_tab`\n"
       "WHERE\n"
       "  col1 = 'abc'\n"
       "  AND col2 > 10\n"
