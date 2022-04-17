@@ -1505,7 +1505,13 @@ void Unparser::visitASTUnnestExpressionWithOptAliasAndOffset(
 
 void Unparser::visitASTTablePathExpression(
     const ASTTablePathExpression* node, void* data) {
-  visitASTChildren(node, data);
+  const auto path_string = node->path_expr()->ToIdentifierPathString();
+  if (path_string.rfind("`", 0) != 0) {
+    print("`" + path_string + "`");
+  } else {
+    print(path_string);
+  }
+  UnparseChildrenWithSeparator(node, data, 1, node->num_children(), "");
 }
 
 void Unparser::visitASTPathExpressionList(const ASTPathExpressionList* node,
@@ -1963,9 +1969,7 @@ void Unparser::visitASTStarWithModifiers(const ASTStarWithModifiers* node,
 void Unparser::visitASTPathExpression(const ASTPathExpression* node,
                                       void* data) {
   PrintOpenParenIfNeeded(node);
-  print("`");
   UnparseChildrenWithSeparator(node, data, ".");
-  print("`");
   PrintCloseParenIfNeeded(node);
 }
 
