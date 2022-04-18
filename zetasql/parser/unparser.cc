@@ -1639,7 +1639,9 @@ void Unparser::visitASTGroupBy(const ASTGroupBy* node, void* data) {
       int_grouping_items.push_back(int_item);
     }
     UnparseVectorWithSeparator(absl::Span<const ASTIntLiteral* const>(int_grouping_items), data, ",");
-    println(",");
+    if (int_grouping_items.size() > 0 && other_grouping_items.size() > 0) {
+      print(",");
+    }
     UnparseVectorWithSeparator(absl::Span<const ASTGroupingItem* const>(other_grouping_items), data, ",\n");
   }
 }
