@@ -23,8 +23,42 @@ wget https://github.com/Matts966/zetasql-formatter/releases/latest/download/zeta
 ```
 
 ```bash
-# To apply formatter
-zetasql-formatter [paths]
+# To apply formatter for files
+$ zetasql-formatter [files and directories]
+
+# Format stdin
+$ echo "select * from test" | zetasql-formatter
+SELECT
+  *
+FROM
+  test;
+
+$ zetasql-formatter
+select * from ok;
+-- CTRL-D
+SELECT
+  *
+FROM
+  ok;
+-- CTRL-D
+```
+
+## Integration with [efm-langserver](https://github.com/mattn/efm-langserver)
+
+- Install efm-langserver
+- Locate [`config.yaml`](https://github.com/mattn/efm-langserver#example-for-configyaml) like below
+
+```yaml
+version: 2
+tools:
+  zetasql-formatter: &zetasql-formatter
+    format-command: zetasql-formatter
+    format-stdin: true
+languages:
+  sql:
+    - <<: *zetasql-formatter
+  sql-bigquery:
+    - <<: *zetasql-formatter
 ```
 
 ## License
