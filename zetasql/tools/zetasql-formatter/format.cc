@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iterator>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -43,11 +44,8 @@ int main(int argc, char* argv[]) {
   gflags::SetVersionString(ZSQL_FMT_VERSION_STRING);
   gflags::ParseCommandLineFlags(&argc, &argv, true);
   if (argc <= 1) {
-    std::string sql;
-    std::string line;
-    while (std::getline(std::cin, line)) {
-      sql << line << std::endl;
-    }
+    std::istreambuf_iterator<char> begin(std::cin), end;
+    std::string sql(begin, end);
     std::string formatted;
     const absl::Status status = zetasql::FormatSql(sql, &formatted);
     if (status.ok()) {
