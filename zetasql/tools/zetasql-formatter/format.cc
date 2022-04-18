@@ -44,7 +44,10 @@ int main(int argc, char* argv[]) {
   gflags::ParseCommandLineFlags(&argc, &argv, true);
   if (argc <= 1) {
     std::string sql;
-    std::cin >> sql;
+    std::string line;
+    while (std::getline(std::cin, line)) {
+      sql << line << std::endl;
+    }
     std::string formatted;
     const absl::Status status = zetasql::FormatSql(sql, &formatted);
     if (status.ok()) {
