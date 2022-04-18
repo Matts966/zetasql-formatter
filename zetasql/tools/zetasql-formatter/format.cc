@@ -43,7 +43,6 @@ int main(int argc, char* argv[]) {
   gflags::SetVersionString(ZSQL_FMT_VERSION_STRING);
   gflags::ParseCommandLineFlags(&argc, &argv, true);
   if (argc <= 1) {
-    std::ifstream file(file_path, std::ios::in);
     std::string sql;
     std::cin >> sql;
     std::string formatted;
