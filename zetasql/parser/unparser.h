@@ -130,7 +130,9 @@ class Unparser : public ParseTreeVisitor {
   }
 
   void visitASTChildren(const ASTNode* node, void* data) {
+    formatter_.FlushCommentsPassedBy(node->GetParseLocationRange().start(), data);
     node->ChildrenAccept(this, data);
+    formatter_.FlushCommentsPassedBy(node->GetParseLocationRange().end(), data);
   }
 
   void visit(const ASTNode* node, void* data) override {
