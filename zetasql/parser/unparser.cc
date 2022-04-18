@@ -1373,6 +1373,8 @@ void Unparser::visitASTQuery(const ASTQuery* node, void* data) {
     visitASTChildren(node, data);
   }
   PrintCloseParenIfNeeded(node);
+  // ASTQuery always ends parent.
+  formatter_.FlushCommentsPassedBy(node->parent()->GetParseLocationRange().end(), data);
 }
 
 void Unparser::visitASTSetOperation(const ASTSetOperation* node, void* data) {
