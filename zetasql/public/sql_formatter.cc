@@ -61,7 +61,6 @@ absl::Status FormatSql(absl::string_view sql, std::string* formatted_sql) {
       GetParseTokens(options, &location, &parse_tokens);
   if (token_status.ok()) {
     for (const auto& parse_token : parse_tokens) {
-      if (parse_token.IsEndOfInput()) break;
       if (parse_token.IsComment()) {
         comments.push_back(std::make_pair(parse_token.GetSQL(), parse_token.GetLocationRange().start()));
       }
