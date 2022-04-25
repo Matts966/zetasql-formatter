@@ -383,9 +383,9 @@ py_library(
         if not native.existing_rule("google_bazel_common"):
             http_archive(
                 name = "google_bazel_common",
-                strip_prefix = "bazel-common-e768dbfea5bac239734b3f59b2a1d7464c6dbd26",
-                urls = ["https://github.com/google/bazel-common/archive/e768dbfea5bac239734b3f59b2a1d7464c6dbd26.zip"],
-                sha256 = "17f66ba76073a290add024a4ce7f5f92883832b7da85ffd7677e1f5de9a36153",
+                strip_prefix = "bazel-common-744704340ab8b1d188936b4b7ac56b54cc596939",
+                urls = ["https://github.com/google/bazel-common/archive/744704340ab8b1d188936b4b7ac56b54cc596939.zip"],
+                sha256 = "a008c5c3b3c34edabb56755ae642f44512efdf234563197ae42d04873cc076ac",
             )
     if evaluator_deps:
         if not native.existing_rule("org_publicsuffix"):
