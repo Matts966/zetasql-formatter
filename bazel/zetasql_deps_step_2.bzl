@@ -391,9 +391,9 @@ py_library(
         if not native.existing_rule("org_publicsuffix"):
             http_archive(
                 name = "org_publicsuffix",
-                strip_prefix = "list-d111481d5931f704c1d9d3a50af19e4e34fc5ba3",
-                urls = ["https://github.com/publicsuffix/list/archive/d111481d5931f704c1d9d3a50af19e4e34fc5ba3.zip"],
-                sha256 = "2f84929af28e2b712a235ab544fbb4dd7bd5d075ac351de0723915e528c99a38",
+                strip_prefix = "list-a7cc621db86f3fa3c46b6c6842b36b9c0eeeb40f",
+                urls = ["https://github.com/publicsuffix/list/archive/a7cc621db86f3fa3c46b6c6842b36b9c0eeeb40f.zip"],
+                sha256 = "b014980174778c86958dbbc5e048bceb5677093461a4c8279a717f997fd1f9c9",
                 build_file_content = """licenses(["reciprocal"])
 
 exports_files([
@@ -403,6 +403,13 @@ exports_files([
     ],
     visibility = ["//visibility:public"]
 )
+alias(
+    name = "test_psl.txt",
+    actual = "tests/test_psl.txt",
+    visibility = ["//visibility:public"]
+)
+""",
+            )
 alias(
     name = "test_psl.txt",
     actual = "tests/test_psl.txt",
