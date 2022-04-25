@@ -156,10 +156,10 @@ py_library(
                 name = "io_abseil_py",
                 # Non-release commit from Nov 17, 2021
                 urls = [
-                    "https://github.com/abseil/abseil-py/archive/a1c1af693b9f15bd0f67fe383cb05e7cc955556b.tar.gz",
+                    "https://github.com/abseil/abseil-py/archive/ce06222fa6feae6f7569310e7af6b9baa97e388a.tar.gz",
                 ],
-                sha256 = "f233de3482bd724a68c4998e03761536ca99dc8b1fc5941fe04f5cf9a39feb54",
-                strip_prefix = "abseil-py-a1c1af693b9f15bd0f67fe383cb05e7cc955556b",
+                sha256 = "fa53ce1fbf0cd48318052cec4e3ac7ea1f889b1d867a054dfc2193556f1bd9ae",
+                strip_prefix = "abseil-py-ce06222fa6feae6f7569310e7af6b9baa97e388a",
             )
 
     if tools_deps:
