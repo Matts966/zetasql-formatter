@@ -229,9 +229,9 @@ py_library(
             http_archive(
                 name = "com_google_farmhash",
                 build_file = "@com_google_zetasql//bazel:farmhash.BUILD",
-                url = "https://github.com/google/farmhash/archive/816a4ae622e964763ca0862d9dbd19324a1eaf45.tar.gz",
-                sha256 = "6560547c63e4af82b0f202cb710ceabb3f21347a4b996db565a411da5b17aba0",
-                strip_prefix = "farmhash-816a4ae622e964763ca0862d9dbd19324a1eaf45",
+                url = "https://github.com/google/farmhash/archive/0d859a811870d10f53a594927d0d0b97573ad06d.tar.gz",
+                sha256 = "18392cf0736e1d62ecbb8d695c31496b6507859e8c75541d7ad0ba092dc52115",
+                strip_prefix = "farmhash-0d859a811870d10f53a594927d0d0b97573ad06d",
             )
     if analyzer_deps:
         # Protobuf
