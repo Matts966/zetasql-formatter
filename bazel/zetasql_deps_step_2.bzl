@@ -256,9 +256,9 @@ py_library(
     if not native.existing_rule("build_bazel_apple_support"):
         http_archive(
             name = "build_bazel_apple_support",
-            urls = ["https://github.com/bazelbuild/apple_support/archive/0.7.1.tar.gz"],
-            sha256 = "140fa73e1c712900097aabdb846172ffa0a5e9523b87d6c564c13116a6180a62",
-            strip_prefix = "apple_support-0.7.1",
+            urls = ["https://github.com/bazelbuild/apple_support/archive/0.13.0.tar.gz"],
+            sha256 = "cf5600fadcf122807d78221c371d9f5ec3d5d423e3c184f2f06f02e397dca799",
+            strip_prefix = "apple_support-0.13.0",
         )
 
     if testing_deps:
