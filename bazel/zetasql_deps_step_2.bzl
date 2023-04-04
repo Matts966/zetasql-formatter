@@ -247,9 +247,9 @@ py_library(
     if not native.existing_rule("build_bazel_rules_apple"):
         http_archive(
             name = "build_bazel_rules_apple",
-            urls = ["https://github.com/bazelbuild/rules_apple/archive/0.18.0.tar.gz"],
-            sha256 = "53a8f9590b4026fbcfefd02c868e48683b44a314338d03debfb8e8f6c50d1239",
-            strip_prefix = "rules_apple-0.18.0",
+            urls = ["https://github.com/bazelbuild/rules_apple/archive/0.34.2.tar.gz"],
+            sha256 = "fe4147539bbb589885607404a1bff297c8a973339a648c17aab00f93c96cf33a",
+            strip_prefix = "rules_apple-0.34.2",
         )
 
     # Required by gRPC
