@@ -327,10 +327,10 @@ py_library(
             http_archive(
                 name = "com_googlesource_code_re2",
                 urls = [
-                    "https://github.com/google/re2/archive/e8cb5ecb8ee1066611aa937a42fa10514edf30fb.tar.gz",
+                    "https://github.com/google/re2/archive/6dcd83d60f7944926bfd308cc13979fc53dd69ca.tar.gz",
                 ],
-                sha256 = "c5f46950cdf33175f0668f454d9b6b4fe1b5a71ffd9283213e77fb04461af099",
-                strip_prefix = "re2-e8cb5ecb8ee1066611aa937a42fa10514edf30fb",
+                sha256 = "b26ba918fe9f74c897cd8a247c6c86836275e5af0d198719e4679967dcf68395",
+                strip_prefix = "re2-6dcd83d60f7944926bfd308cc13979fc53dd69ca",
             )
 
         # Jinja2.
