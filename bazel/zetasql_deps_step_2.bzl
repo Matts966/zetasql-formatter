@@ -75,9 +75,9 @@ def zetasql_deps_step_2(
             #    echo strip_prefix = \"${PREFIX}${COMMIT}\",
             http_archive(
                 name = "com_google_googleapis",
-                url = "https://github.com/googleapis/googleapis/archive/2f9af297c84c55c8b871ba4495e01ade42476c92.tar.gz",
-                sha256 = "5bb6b0253ccf64b53d6c7249625a7e3f6c3bc6402abd52d3778bfa48258703a0",
-                strip_prefix = "googleapis-2f9af297c84c55c8b871ba4495e01ade42476c92",
+                url = "https://github.com/googleapis/googleapis/archive/5ebb5c1e3d2953efd05c068b27138098eecc8308.tar.gz",
+                sha256 = "1a1ea4e945601d8f7fd05fcdd36b69cf0e29406e2cdaa945009475a0614b68e1",
+                strip_prefix = "googleapis-5ebb5c1e3d2953efd05c068b27138098eecc8308",
             )
 
         # Abseil
