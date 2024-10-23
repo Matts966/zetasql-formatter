@@ -238,9 +238,9 @@ py_library(
         if not native.existing_rule("com_google_protobuf"):
             http_archive(
                 name = "com_google_protobuf",
-                urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.19.3.tar.gz"],
-                sha256 = "390191a0d7884b3e52bb812c440ad1497b9d484241f37bb8e2ccc8c2b72d6c36",
-                strip_prefix = "protobuf-3.19.3",
+                urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.28.3.tar.gz"],
+                sha256 = "930accbcf5e56d17ff26408262e1b4a888331def942e07fc48a35be9d1bb3111",
+                strip_prefix = "protobuf-3.28.3",
             )
 
     # Required by gRPC
