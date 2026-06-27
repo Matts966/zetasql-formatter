@@ -48,9 +48,9 @@ def zetasql_deps_step_1(add_bazel_version = True):
     if not native.existing_rule("rules_foreign_cc"):
         http_archive(
             name = "rules_foreign_cc",
-            strip_prefix = "rules_foreign_cc-e24d9cecfe4cadc496fe0c128ef5f8399a4e24a5",
+            strip_prefix = "rules_foreign_cc-f68b351c4691e747f889dc5e4c2cac3cd3b66ea2",
             urls = [
-                "https://github.com/bazelbuild/rules_foreign_cc/archive/e24d9cecfe4cadc496fe0c128ef5f8399a4e24a5.tar.gz",
+                "https://github.com/bazelbuild/rules_foreign_cc/archive/f68b351c4691e747f889dc5e4c2cac3cd3b66ea2.tar.gz",
             ],
-            sha256 = "648bedf0e61a0e4492e6db929f710d8d1ba25a62d03882c3980af022e42c7f2f",
+            sha256 = "7f05eb9cc4b1c600c643e69221c88203244ccadc75ae28c4ade960f0f0742f26",
         )
