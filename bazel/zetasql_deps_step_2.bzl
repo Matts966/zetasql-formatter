@@ -218,10 +218,10 @@ py_library(
                 name = "boringssl",
                 # Commit from 2021-11-01
                 urls = [
-                    "https://github.com/google/boringssl/archive/4fb158925f7753d80fb858cb0239dff893ef9f15.tar.gz",
+                    "https://github.com/google/boringssl/archive/4a92579453b35319e2707eab68a0b7d1f8d5d053.tar.gz",
                 ],
-                sha256 = "e168777eb0fc14ea5a65749a2f53c095935a6ea65f38899a289808fb0c221dc4",
-                strip_prefix = "boringssl-4fb158925f7753d80fb858cb0239dff893ef9f15",
+                sha256 = "325b098eeb6caff340e070be9ed795b6ff2a69cff9f7c79cf92f67bd80d44789",
+                strip_prefix = "boringssl-4a92579453b35319e2707eab68a0b7d1f8d5d053",
             )
 
         # Farmhash
