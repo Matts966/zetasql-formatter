@@ -187,9 +187,9 @@ py_library(
             http_archive(
                 name = "com_google_riegeli",
                 # Commit from 2022-02-16
-                url = "https://github.com/google/riegeli/archive/934428f44a6d120cb6c065315c788aa3a1be6b66.tar.gz",
-                sha256 = "a54dafa634db87723db106bc44ef365b1b442d8862aafbeb5f1d2e922049e587",
-                strip_prefix = "riegeli-934428f44a6d120cb6c065315c788aa3a1be6b66",
+                url = "https://github.com/google/riegeli/archive/5eb4c6614ecad83fd5f510b86f1567fcf0d84a65.tar.gz",
+                sha256 = "1acda237bb570fcff14b5c6ae840bd67cc68f4c186d085de3c0652f040a774de",
+                strip_prefix = "riegeli-5eb4c6614ecad83fd5f510b86f1567fcf0d84a65",
             )
     if evaluator_deps:
         # Differential Privacy
