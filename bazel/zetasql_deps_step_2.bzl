@@ -275,9 +275,9 @@ py_library(
         if not native.existing_rule("com_github_grpc_grpc"):
             http_archive(
                 name = "com_github_grpc_grpc",
-                urls = ["https://github.com/grpc/grpc/archive/v1.43.2.tar.gz"],
-                sha256 = "b74ce7d26fe187970d1d8e2c06a5d3391122f7bc1fdce569aff5e435fb8fe780",
-                strip_prefix = "grpc-1.43.2",
+                urls = ["https://github.com/grpc/grpc/archive/v1.84.0.tar.gz"],
+                sha256 = "17a4d25717f4871eb71cfdf191f7491f66a59c8ebc782ab53d52fcbfc478959f",
+                strip_prefix = "grpc-1.84.0",
             )
 
     if analyzer_deps:
