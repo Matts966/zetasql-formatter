@@ -104,9 +104,9 @@ def zetasql_deps_step_2(
             http_archive(
                 name = "com_google_absl",
                 # Commit from 2022-01-19
-                url = "https://github.com/abseil/abseil-cpp/archive/fbbb5865a562c9a9167d71c1cf56b82025a8f065.tar.gz",
-                sha256 = "18aadf5b16743399d37e3d2880c181f57ef0d0cef8ed6086f53fd254c8cff6c2",
-                strip_prefix = "abseil-cpp-fbbb5865a562c9a9167d71c1cf56b82025a8f065",
+                url = "https://github.com/abseil/abseil-cpp/archive/583556e932a5ef4bf22d5e32c6a42cbfdde07307.tar.gz",
+                sha256 = "1dd7107cc570b7f0560c910d880add79626a709a93b0de48ce6af3f001ebd16e",
+                strip_prefix = "abseil-cpp-583556e932a5ef4bf22d5e32c6a42cbfdde07307",
             )
 
         # required by many python libraries
